@@ -20,6 +20,10 @@ class index_controller extends base_controller {
 			
 		# Now set the <title> tag
 			$this->template->title = "Hello World";
+			
+		# Get and print the current timestamp
+		echo Time::now();
+
 	
 		# CSS/JS includes
 			/*
