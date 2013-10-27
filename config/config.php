@@ -31,7 +31,7 @@ A email designated to receive messages from the server. Examples:
 	define('SYSTEM_EMAIL', 'webmaster@myapp.com'); 
 
 # Default DB name for this app
-	define('DB_NAME', 'p2_jacksonyeh_net'); 
+	define('DB_NAME', 'jacksony_p2_jacksonyeh_net'); 
 
 # Timezone
 	define('TIMEZONE', 'America/New_York');
