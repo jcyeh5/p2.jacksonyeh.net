@@ -20,12 +20,11 @@ class users_controller extends base_controller {
 		# Create an array of 1 or many client files to be included before the closing </body> tag
 		$client_files_head = Array(
         "/js/jquery-1.10.2.min.js",
-		"/js/jstz.min.js"
+		"/js/jstz-1.0.4.min"
         );
 		# Use load_client_files to generate the links from the above array
 		$this->template->client_files_head = Utils::load_client_files($client_files_head);  
-		
-			
+				
         # Render template
         echo $this->template;
     }
@@ -34,9 +33,9 @@ class users_controller extends base_controller {
 		
 	
         # Dump out the results of POST to see what the form submitted
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>'; 
+        #echo '<pre>';
+        #print_r($_POST);
+        #echo '</pre>'; 
 	
 
 		# Sanitize user input before moving on
