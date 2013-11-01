@@ -1,0 +1,55 @@
+body {
+	margin-left: 5%;
+	margin-right: 5%;  
+	background:  #505050   ;
+	//background: #708090;
+	font-family: Calibri,Arial,sans-serif;	
+
+}  
+
+#wrapper {
+	width:  900px;
+	background: #A0A0A0 ;
+	margin: 0 auto;
+}
+
+#headerimage {
+	display: block;
+	background-image: url(/images/my2cents_masthead.jpg);  
+	height: 150px;  
+	width:  900px;
+	text-indent: -9999px;
+
+}
+
+#headernav {
+	background: gray;
+	border-bottom: medium solid red;	
+}
+
+#headernav ul {  
+	display: inline;  
+	background: gray;
+
+}  
+
+#headernav ul li {  
+	display: inline;
+	background-position: left;  
+	background-repeat: no-repeat;  
+	padding-left: 25px;
+	padding-right:25px;
+	background: gray;
+	font-size: large;
+	font-weight: bold;
+	margin: 0;
+}  
+
+#headernav ul a {
+	font-size: 100%;  
+	font-weight: normal; 
+ 	color: white;
+	text-decoration: none;
+
+
+}
