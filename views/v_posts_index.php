@@ -11,7 +11,12 @@
 			<?=Time::display($post['created'])?>
 		</time>
 
-	</article>
+		<!-- Display Delete button only for own posts -->
+	    <?php if($user->user_id == $post['post_user_id']): ?>
+			<div align= right> <a href='/posts/delete/<?=$post['post_id']?>'><img src="/images/delete.png"></a> </div>
+		<?php endif; ?>	
+
+		</article>
 </div>
 
 <?php endforeach; ?>
