@@ -7,7 +7,14 @@ class users_controller extends base_controller {
     } 
 
     public function index() {
-        echo "This is the index page";
+	
+		# If user is blank, they're not logged in; redirect them to the login page
+		if(!$this->user) {
+			Router::redirect('/users/login');
+		}	
+
+		Router::redirect('/posts/users');		
+		
     }
 
     public function signup($error = NULL) {
@@ -128,6 +135,13 @@ class users_controller extends base_controller {
 
 	public function p_login() {
 
+		# check if Email and Password fields have been filled in.  If not, send back to login.
+		if ($_POST['email'] == "" && $_POST['password'] == "") {
+			
+			# Send them back to the login page with an error
+			Router::redirect("/users/login/error");	
+		}
+		
 		# Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
 		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
 
@@ -173,6 +187,11 @@ class users_controller extends base_controller {
 	
 	public function logout() {
 
+    # If user is blank, they're not logged in; redirect them to the login page
+    if(!$this->user) {
+        Router::redirect('/users/login');
+    }
+	
     # Generate and save a new token for next login
     $new_token = sha1(TOKEN_SALT.$this->user->email.Utils::generate_random_string());
 
