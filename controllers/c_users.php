@@ -159,8 +159,120 @@ class users_controller extends base_controller {
     $this->template->content = View::instance('v_users_profile');
     $this->template->title   = "Profile of".$this->user->first_name;
 
-    # Render template
-    echo $this->template;
+	# for error messages
+	$change_password_error = "";
+	$this->template->content->change_password_error = $change_password_error;
+	
+	# Query
+	$q = 'SELECT 
+				first_name,
+				last_name,
+				email,
+				timezone
+			
+			FROM users
+			WHERE users.user_id = '.$this->user->user_id ;
+
+	# Run the query, store the results in the variable $posts
+	$profile = DB::instance(DB_NAME)->select_row($q);	
+	
+	# Pass data to the View
+	$this->template->content->profile = $profile;
+
+	# Render the View
+	echo $this->template;
+	
+}
+
+
+	public function p_profile() {
+
+    # If user is blank, they're not logged in; redirect them to the login page
+    if(!$this->user) {
+        Router::redirect('/users/login');
+    }
+
+    # If they weren't redirected away, continue:
+
+    # Setup view
+    $this->template->content = View::instance('v_users_profile');
+    $this->template->title   = "Profile of".$this->user->first_name;	
+	
+	# check if they want to change the password.
+	# Both Change Password and Confirm Password have to be the same.
+	# If not, display profile view print an error message
+	
+	if ($_POST['change_password'] != "" && $_POST['change_password'] != $_POST['confirm_password']) {
+		$change_password_error = "new password and confirm password do not match, please retry";
+
+		#fill in $profile array with _POST values
+		$profile = Array(	'first_name' => $_POST['first_name'], 
+							'last_name' => $_POST['last_name'],
+							'email' => $_POST['email'],
+							'change_password' => $_POST['change_password'],	
+							'confirm_password' => $_POST['confirm_password']
+						);
+						
+		# Pass data back to the View
+		$this->template->content->profile = $profile;
+		$this->template->content->change_password_error = $change_password_error;
+
+		# Render the View
+		echo $this->template;							
+	}
+	# either 1) Do not change password or 2) change password has been confirmed
+	else {
+		# Sanitize user input before moving on
+		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
+			
+		# More data we want stored with the user
+		$_POST['modified'] = Time::now();
+
+		# Create an encrypted token via their email address and a random string
+		$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 		
+		
+		# Do not change password
+		if ($_POST['change_password'] == ""){
+			# Update this user into the database
+			$data    = Array(	'user_id' => $this->user->user_id , 
+								'first_name' => $_POST['first_name'], 
+								'last_name' => $_POST['last_name'],
+								'email' => $_POST['email'],
+								'timezone' => $_POST['timezone'],
+								'token' => $_POST['token'],
+								'modified' => $_POST['modified']
+							);	
+		}
+		# Change the password
+		else {
+			# Encrypt the password  
+			$_POST['change_password'] = sha1(PASSWORD_SALT.$_POST['change_password']);   
+
+			# Update this user into the database
+			$data    = Array(	'user_id' => $this->user->user_id , 
+								'first_name' => $_POST['first_name'], 
+								'last_name' => $_POST['last_name'],
+								'email' => $_POST['email'],
+								'password' => $_POST['change_password'],
+								'timezone' => $_POST['timezone'],
+								'token' => $_POST['token'],
+								'modified' => $_POST['modified']
+							);	
+			
+		}
+						
+		$user_id = DB::instance(DB_NAME)->update_or_insert_row('users', $data);	
+		
+		
+			# For now, just confirm they've signed up - 
+			# You should eventually make a proper View for this
+			//echo 'You\'re signed up';	
+			
+			# Send them to the main page - or whever you want them to go
+			Router::redirect("/users/login");			
+	}
+	
 }
 
 
