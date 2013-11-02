@@ -40,6 +40,17 @@ class posts_controller extends base_controller {
 
     }
 	
+   public function delete($post_id) {
+
+		# Delete this connection
+		$where_condition = 'WHERE post_id = '.$post_id;
+		DB::instance(DB_NAME)->delete('posts', $where_condition);
+
+		# Send them back
+		Router::redirect("/posts/index");
+
+    }	
+	
 	public function index() {
 
 		# Set up the View
@@ -48,6 +59,7 @@ class posts_controller extends base_controller {
 
 		# Query
 		$q = 'SELECT 
+				posts.post_id,
 				posts.content,
 				posts.created,
 				posts.user_id AS post_user_id,
@@ -59,7 +71,8 @@ class posts_controller extends base_controller {
 				ON posts.user_id = users_users.user_id_followed
 			INNER JOIN users 
 				ON posts.user_id = users.user_id
-			WHERE users_users.user_id = '.$this->user->user_id .'
+			WHERE users_users.user_id = '.$this->user->user_id .' 
+			or posts.user_id = '.$this->user->user_id .' 
 			ORDER BY posts.created DESC';
 
 		# Run the query, store the results in the variable $posts
