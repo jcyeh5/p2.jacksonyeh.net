@@ -6,13 +6,14 @@ class posts_controller extends base_controller {
         parent::__construct();
 
         # Make sure user is logged in if they want to use anything in this controller
-        if(!$this->user) {
-            die("Members only. <a href='/users/login'>Login</a>");
-        }
+		# If user is blank, they're not logged in; redirect them to the login page
+		if(!$this->user) {
+			Router::redirect('/users/login');
+		}
     }
 
     public function add() {
-
+	
         # Setup view
         $this->template->content = View::instance('v_posts_add');
         $this->template->title   = "New Post";
@@ -23,8 +24,8 @@ class posts_controller extends base_controller {
     }
 
     public function p_add() {
-
-        # Associate this post with this user
+ 
+		# Associate this post with this user
         $_POST['user_id']  = $this->user->user_id;
 
         # Unix timestamp of when this post was created / modified
@@ -52,7 +53,7 @@ class posts_controller extends base_controller {
     }	
 	
 	public function index() {
-
+	
 		# Set up the View
 		$this->template->content = View::instance('v_posts_index');
 		$this->template->title   = "All Posts";
@@ -89,7 +90,7 @@ class posts_controller extends base_controller {
 
 
 	public function users() {
-
+	
 		# Set up the View
 		$this->template->content = View::instance("v_posts_users");
 		$this->template->title   = "Users";
@@ -126,22 +127,22 @@ class posts_controller extends base_controller {
 	public function follow($user_id_followed) {
 
 		# Prepare the data array to be inserted
-		$data = Array(
-			"created" => Time::now(),
-			"user_id" => $this->user->user_id,
-			"user_id_followed" => $user_id_followed
-			);
+			$data = Array(
+				"created" => Time::now(),
+				"user_id" => $this->user->user_id,
+				"user_id_followed" => $user_id_followed
+				);
 
-		# Do the insert
-		DB::instance(DB_NAME)->insert('users_users', $data);
+			# Do the insert
+			DB::instance(DB_NAME)->insert('users_users', $data);
 
-		# Send them back
-		Router::redirect("/posts/users");
+			# Send them back
+			Router::redirect("/posts/users");
 
 	}
 
 	public function unfollow($user_id_followed) {
-
+	
 		# Delete this connection
 		$where_condition = 'WHERE user_id = '.$this->user->user_id.' AND user_id_followed = '.$user_id_followed;
 		DB::instance(DB_NAME)->delete('users_users', $where_condition);
