@@ -39,6 +39,33 @@ class index_controller extends base_controller {
 			Router::redirect('/users/login');
 		}
 
+		# Else user is already logged in.  Get user's statistics
+		
+			# Get number of posts
+				# Query
+				$q = "	SELECT count(post_id)as num_posts			
+					FROM posts
+					WHERE posts.user_id = '".$this->user->user_id."'";
+
+
+				# Run the query, store the results in the variable $profile
+				$posts = DB::instance(DB_NAME)->select_row($q);	
+				
+				
+			# Get number of followers
+				# Query
+				$p = "	SELECT count(user_user_id)as num_followers			
+					FROM users_users
+					WHERE users_users.user_id_followed = '".$this->user->user_id."'";
+
+
+				# Run the query, store the results in the variable $profile
+				$followers = DB::instance(DB_NAME)->select_row($p);			
+			
+			# Pass data to the View
+			$this->template->content->posts = $posts;
+			$this->template->content->followers = $followers;			
+		
 		
 		# Render template
 			echo $this->template;
