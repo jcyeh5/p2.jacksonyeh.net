@@ -22,10 +22,8 @@ class index_controller extends base_controller {
 			$this->template->title = "My Two Cents";
 			
 		# Get and print the current timestamp
-		
 		//echo Time::now();
 
-	
 		# CSS/JS includes
 			/*
 			$client_files_head = Array("");
@@ -35,9 +33,18 @@ class index_controller extends base_controller {
 	    	$this->template->client_files_body = Utils::load_client_files($client_files_body);   
 	    	*/
 	      					     		
-		# Render the view
+
+		# If user is blank, they're not logged in; redirect them to the login page
+		if(!$this->user) {
+			Router::redirect('/users/login');
+		}
+
+		
+		# Render template
 			echo $this->template;
 
+ 		
+			
 	} # End of method
 	
 	

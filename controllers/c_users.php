@@ -68,25 +68,46 @@ class users_controller extends base_controller {
 
 		
 		# More data we want stored with the user
-		$_POST['created']  = Time::now();
-		$_POST['modified'] = Time::now();
+			$_POST['created']  = Time::now();
+			$_POST['modified'] = Time::now();
 
 		# Encrypt the password  
-		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);            
+			$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);            
 
 		# Create an encrypted token via their email address and a random string
-		$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
+			$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
 
 		
 		# Insert this user into the database
-		$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
+			$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
 
-		# For now, just confirm they've signed up - 
-		# You should eventually make a proper View for this
-		//echo 'You\'re signed up';	
+
+		# Send a Sign Up Confirmation Email
 		
-		# Send them to the main page - or whever you want them to go
-		Router::redirect("/users/login");		
+			# Build a multi-dimension array of recipients of this email
+			$to[] = Array("name" => $_POST['first_name']." ".$_POST['last_name'], "email" => $_POST['email']);
+
+			# Build a single-dimension array of who this email is coming from
+			# note it's using the constants we set in the configuration above)
+			$from = Array("name" => APP_NAME, "email" => APP_EMAIL);
+
+			# Subject
+			$subject = "Welcome to My 2 Cents";
+
+			# You can set the body as just a string of text
+			$body = "Hi ".$_POST['first_name'].", this is just a message to confirm your registration at My 2 Cents";
+
+			# Build multi-dimension arrays of name / email pairs for cc / bcc if you want to 
+			$cc  = "";
+			$bcc = "";
+
+			# With everything set, send the email
+			$email = Email::send($to, $from, $subject, $body, true, $cc, $bcc);
+
+	
+	
+		# Send them to the login page
+			Router::redirect("/users/login");		
 		
     }
 

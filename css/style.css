@@ -54,8 +54,24 @@ body {
 
 }
 
+#newpostframe {
+	border: thin solid black;
+	background: #FFFFFF;	
+		width: 500px;
+}
+
+#newpostform {
+	border: thin solid black;
+	background: gray;
+	margin: 5px;
+	padding: 5px;	
+	margin: 5px;
+}
+
 #content {
-	padding: 5%;
+	margin: 5px;
+	padding: 5px;
+
 }
 
 
@@ -66,4 +82,17 @@ body {
 	padding-right: 5%;
 	padding-bottom: 5%;
 	margin: 5px;
+}
+
+#loginframe {
+	border: thin solid black;
+	background: #FFFFFF;	
+}
+
+#loginform {
+	border: thin solid black;
+	background: gray;
+	margin: 5px;
+	padding: 5px;
+	width: 200px;
 }
