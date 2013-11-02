@@ -24,6 +24,13 @@
 		$('input[name=timezone]').val(jstz.determine().name());
 	</script>
 
+    <?php if(isset($error)): ?>
+        <div class='error'>
+            There is an existing account with that email address.  Please use another.
+        </div>
+        <br>
+    <?php endif; ?>	
+	
     <input type='submit' value='Sign up'>
 
 </form>

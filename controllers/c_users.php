@@ -10,7 +10,7 @@ class users_controller extends base_controller {
         echo "This is the index page";
     }
 
-    public function signup() {
+    public function signup($error = NULL) {
 
         # Setup view
         $this->template->content = View::instance('v_users_signup');
@@ -24,7 +24,10 @@ class users_controller extends base_controller {
         );
 		# Use load_client_files to generate the links from the above array
 		$this->template->client_files_head = Utils::load_client_files($client_files_head);  
-				
+
+		# Pass data to the view
+		$this->template->content->error = $error;	
+		
         # Render template
         echo $this->template;
     }
@@ -40,6 +43,28 @@ class users_controller extends base_controller {
 
 		# Sanitize user input before moving on
 		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
+		# Check if email has already been registered
+		
+			# Query
+			$q = "	SELECT email			
+					FROM users
+					WHERE users.email = '".$_POST['email']."'";
+
+
+			# Run the query, store the results in the variable $profile
+			$profile = DB::instance(DB_NAME)->select_row($q);	
+		
+			
+			# if the email address already exists in the database
+			if ($profile != null){
+				# Send them back to the login page with an error
+				Router::redirect("/users/signup/alreadytaken");		
+			}
+	
+		
+		
+		
 
 		
 		# More data we want stored with the user
