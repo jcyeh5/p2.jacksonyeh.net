@@ -53,3 +53,17 @@ body {
 
 
 }
+
+#content {
+	padding: 5%;
+}
+
+
+.post {
+	border: thin solid black;
+	background: #FFFFFF;
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-bottom: 5%;
+	margin: 5px;
+}

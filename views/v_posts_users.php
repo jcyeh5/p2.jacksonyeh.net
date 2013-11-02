@@ -1,7 +1,7 @@
 <?php foreach($users as $user): ?>
 
 
-
+	
     <!-- If there exists a connection with this user, show a unfollow link -->
     <?php if(isset($connections[$user['user_id']])): ?>
         <a href='/posts/unfollow/<?=$user['user_id']?>'><img src="/images/unfollow.png"></a>
@@ -14,4 +14,6 @@
     <?php echo "  "?><?=$user['first_name']?> <?=$user['last_name']?>
     <br><br>
 
+
+	
 <?php endforeach; ?>
