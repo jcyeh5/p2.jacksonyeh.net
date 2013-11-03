@@ -33,7 +33,7 @@
 					<?php else: ?>
 
 						<li id="mainnav_signup"><a href='/users/signup'>Sign up</a></li>
-						<li id="mainnav_login"><a href='/users/login'>Log in</a></li>
+
 
 					<?php endif; ?>					
 
