@@ -1,7 +1,8 @@
 body {
 	margin-left: 5%;
 	margin-right: 5%;  
-	background:  #505050   ;
+	//background:  #505050   ;
+	background: rgb(2,27,46);
 	//background: #708090;
 	font-family: Calibri,Arial,sans-serif;	
 
@@ -23,14 +24,15 @@ body {
 }
 
 #headernav {
-	background: navy;
-	border-bottom: medium solid red;	
+	//background: navy;
+	background: rgb(3,37,64);
+	border-bottom: medium solid orange;	
 }
 
 #headernav ul {  
 	display: inline;  
-	background: navy;
-
+	//background: navy;
+	background: rgb(3,37,64);
 }  
 
 #headernav ul li {  
@@ -39,7 +41,8 @@ body {
 	background-repeat: no-repeat;  
 	padding-left: 25px;
 	padding-right:25px;
-	background: navy;
+//	background: navy;
+	background: rgb(3,37,64);
 	font-size: large;
 	font-weight: bold;
 	margin: 0;
@@ -52,6 +55,11 @@ body {
 	text-decoration: none;
 
 
+}
+
+.followbutton {
+	width: 47;
+	height: 15;
 }
 
 #newpostframe {

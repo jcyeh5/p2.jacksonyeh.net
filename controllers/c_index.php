@@ -60,11 +60,23 @@ class index_controller extends base_controller {
 
 
 				# Run the query, store the results in the variable $profile
-				$followers = DB::instance(DB_NAME)->select_row($p);			
+				$followers = DB::instance(DB_NAME)->select_row($p);	
+
+			# Get date/time of last post
+				# Query
+				$r = "	SELECT created			
+					FROM posts
+					WHERE posts.user_id = '".$this->user->user_id."' order by created desc limit 0,1";
+
+
+				# Run the query, store the results in the variable $profile
+				$lastpost = DB::instance(DB_NAME)->select_row($r);					
 			
 			# Pass data to the View
 			$this->template->content->posts = $posts;
-			$this->template->content->followers = $followers;			
+			$this->template->content->followers = $followers;
+			$this->template->content->lastpost = $lastpost;
+				
 		
 		
 		# Render template
