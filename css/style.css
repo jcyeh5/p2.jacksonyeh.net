@@ -18,6 +18,13 @@ body {
 	margin: 0 auto;
 }
 
+.hide-text {
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+
 /*-------------------------------------------------------------------------------------------------
 Header
 -------------------------------------------------------------------------------------------------*/
@@ -61,8 +68,6 @@ Header
 	font-weight: normal; 
  	color: white;
 	text-decoration: none;
-
-
 }
 
 
@@ -118,6 +123,31 @@ Posts
 	padding-right: 5%;
 	padding-bottom: 5%;
 	margin: 5px;
+}
+
+#like_img {
+	padding-bottom: 4px;
+}
+
+#likes_count {
+	padding: 0px;
+	margin: 0px;
+	padding-bottom: 2px;
+}
+
+#likelink:hover {
+	background: url('/images/liked.png') bottom;
+}
+
+#post_submenu ul {
+	display: inline;  
+}
+
+#post_submenu ul li {  
+	display: inline;
+}
+#post_submenu ul li a {
+	text-decoration: none;
 }
 
 /*-------------------------------------------------------------------------------------------------

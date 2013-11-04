@@ -58,7 +58,7 @@ class posts_controller extends base_controller {
 		$this->template->content = View::instance('v_posts_index');
 		$this->template->title   = "All Posts";
 
-		# Query
+		# POSTS
 		$q = 'SELECT 
 				posts.post_id,
 				posts.content,
@@ -79,8 +79,20 @@ class posts_controller extends base_controller {
 		# Run the query, store the results in the variable $posts
 		$posts = DB::instance(DB_NAME)->select_rows($q);
 
+
+		# LIKES
+		$p = 'SELECT
+				post_id,
+				COUNT(like_id) as num_likes
+			FROM likes
+			GROUP BY post_id';
+
+		# Run the query, store the results in the variable $likes
+		$likes = DB::instance(DB_NAME)->select_rows($p);
+			
 		# Pass data to the View
 		$this->template->content->posts = $posts;
+		$this->template->content->likes = $likes;		
 		$this->template->content->user = $this->user;
 		
 		# Render the View
@@ -151,6 +163,28 @@ class posts_controller extends base_controller {
 		Router::redirect("/posts/users");
 
 	}
+
+	public function like($post_id, $user_id) {
 	
+	#fill in $input array
+	
+
+		$compoundindex = $post_id.$user_id;
+	
+        # Insert
+		$input = Array(	'like_id' => $compoundindex,
+						'created' => Time::now(), 
+						'post_id' => $post_id,
+						'user_id' => $user_id,
+						);
+						
+        # Note we didn't have to sanitize any of the data because we're using the insert method which does it for us
+        DB::instance(DB_NAME)->update_or_insert_row('likes', $input);			
+
+		# Send them to the posts page
+		Router::redirect("/posts/index/");			
+	}
+	
+
 	
 }

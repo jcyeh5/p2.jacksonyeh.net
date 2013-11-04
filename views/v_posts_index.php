@@ -10,11 +10,26 @@
 		<p id="post_content"><?=$post['content']?></p>
 		
 
+		<div id="post_submenu" align= right> 
+			<ul>
+				<!-- Display Delete button only for own posts -->
+				<?php if($user->user_id == $post['post_user_id']): ?>
+				<li><a href='/posts/delete/<?=$post['post_id']?>'><img src="/images/delete.png" alt="delete this post"></a> </li>
+				<?php endif; ?>					
+				<li><a href='/posts/like/<?=$post['post_id']?>/<?=$user->user_id?>'> <img id="like_img" src="/images/like.png" alt="like this post"></a></li>
 
-		<!-- Display Delete button only for own posts -->
-	    <?php if($user->user_id == $post['post_user_id']): ?>
-			<div align= right> <a href='/posts/delete/<?=$post['post_id']?>'><img src="/images/delete.png"></a> </div>
-		<?php endif; ?>	
+				<!-- If there are any likes for this post -->
+				<?php foreach ($likes as $like): ?>
+					<?php if ($like['post_id'] == $post['post_id']): ?>
+						<li><p id="likes_count">likes: <?=$like['num_likes']?> </p></li>	
+					<?php endif; ?>		
+				<?php endforeach; ?>
+
+
+
+			</ul>
+		</div>
+
 
 	</article>
 </div>

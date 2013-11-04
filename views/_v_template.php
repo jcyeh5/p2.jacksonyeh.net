@@ -14,7 +14,7 @@
 	<div id="wrapper">
 		<div id="header">
 	
-				<a href='/' id="headerimage" title="My Two Cents"><h1>My Two Cents</h1></a>
+				<a href='/' id="headerimage" title="My Two Cents" alt="My 2 Cents homepage"><h1>My Two Cents</h1></a>
 		
 			<div id="headernav">
 				<ul id="mainnav">
