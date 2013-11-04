@@ -68,7 +68,7 @@ class posts_controller extends base_controller {
 				users.first_name,
 				users.last_name
 			FROM posts
-			LEFT JOIN users_users 
+			INNER JOIN users_users 
 				ON posts.user_id = users_users.user_id_followed
 			INNER JOIN users 
 				ON posts.user_id = users.user_id
