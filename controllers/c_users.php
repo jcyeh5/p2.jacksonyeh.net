@@ -176,6 +176,7 @@ class users_controller extends base_controller {
 			# Insert this user into the database
 				$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
 
+			
 
 			# Send a welcome Email
 			
@@ -203,6 +204,18 @@ class users_controller extends base_controller {
 			# for now, we are not requiring an email confirmation, so just direct them to home page
 			setcookie("token", $_POST['token'], strtotime('+2 weeks'), '/');
 
+			
+			# follow myself
+				# Prepare the data array to be inserted
+				$data = Array(
+					"created" => Time::now(),
+					"user_id" => $user_id,
+					"user_id_followed" =>  $user_id
+					);
+
+				# Do the insert
+				DB::instance(DB_NAME)->insert('users_users', $data);			
+			
 			# Send them to the home page
 				Router::redirect("/");		
 		}
