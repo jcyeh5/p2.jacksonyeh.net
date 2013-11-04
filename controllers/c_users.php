@@ -32,8 +32,26 @@ class users_controller extends base_controller {
 		# Use load_client_files to generate the links from the above array
 		$this->template->client_files_head = Utils::load_client_files($client_files_head);  
 
+		# for error messages
+			$first_name_error = "";
+			$last_name_error = "";
+			$email_error = "";
+			$password_error = "";
+/*
+			$profile = Array(	'first_name' => "", 
+								'last_name' => "",
+								'email' => "",
+								'password' => ""
+							);		
+*/
+						
 		# Pass data to the view
-		$this->template->content->error = $error;	
+			$this->template->content->error = $error;	
+			$this->template->content->first_name_error = $first_name_error;
+			$this->template->content->last_name_error = $last_name_error;
+			$this->template->content->email_error = $email_error;			
+			$this->template->content->password_error = $password_error;	
+			$this->template->content->profile = @profile;
 		
         # Render template
         echo $this->template;
@@ -46,76 +64,130 @@ class users_controller extends base_controller {
         #echo '<pre>';
         #print_r($_POST);
         #echo '</pre>'; 
-	
-
-		# Sanitize user input before moving on
-		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
-
-		# Check if email has already been registered
 		
-			# Query
-			$q = "	SELECT email			
-					FROM users
-					WHERE users.email = '".$_POST['email']."'";
+        # Setup view
+        $this->template->content = View::instance('v_users_signup');
+        $this->template->title   = "Sign Up";
+
+		// CSS/JS includes
+		# Create an array of 1 or many client files to be included before the closing </body> tag
+		$client_files_head = Array(
+        "/js/jquery-1.10.2.min.js",
+		"/js/jstz-1.0.4.min.js"
+        );
+		# Use load_client_files to generate the links from the above array
+		$this->template->client_files_head = Utils::load_client_files($client_files_head);  	
+
+		# check if all required fields are filled in...if not, redirect back to sign up screen
+
+			$first_name_error = "";
+			$last_name_error = "";
+			$email_error = "";
+			$password_error = "";
+			
+			if ($_POST['first_name'] == "") {
+				$first_name_error = "<-- first name is a required field";
+			}
+			if ($_POST['last_name'] == "") {
+				$last_name_error = "<-- last name is a required field";
+			}
+			if ($_POST['email'] == "") {
+				$email_error = "<-- email is a required field";
+			}
+			if ($_POST['password'] == "") {
+				$password_error = "<-- password is a required field";
+			}
+
+		
+		# if any of the fields above are not filled in correctly, redirect back to sign up screen
+		if ($first_name_error != "" || $last_name_error != "" || $email_error != "" || $password_error != "") {
+			#fill in $profile array with _POST values
+			$profile = Array(	'first_name' => $_POST['first_name'], 
+								'last_name' => $_POST['last_name'],
+								'email' => $_POST['email'],
+								'password' => $_POST['password']
+							);
+						
+			# Pass data back to the View
+			$this->template->content->profile = $profile;
+			$this->template->content->first_name_error = $first_name_error;
+			$this->template->content->last_name_error = $last_name_error;
+			$this->template->content->email_error = $email_error;			
+			$this->template->content->password_error = $password_error;
+
+			# Render the View
+			echo $this->template;							
+		}	
+		# else, input has been validated
+		else {
+		
+		
+			# Sanitize user input before moving on
+			$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
+			# Check if email has already been registered
+			
+				# Query
+				$q = "	SELECT email			
+						FROM users
+						WHERE users.email = '".$_POST['email']."'";
 
 
-			# Run the query, store the results in the variable $profile
-			$profile = DB::instance(DB_NAME)->select_row($q);	
+				# Run the query, store the results in the variable $profile
+				$profile = DB::instance(DB_NAME)->select_row($q);	
+			
+				
+				# if the email address already exists in the database
+				if ($profile != null){
+					# Send them back to the login page with an error
+					Router::redirect("/users/signup/alreadytaken");		
+				}
 		
 			
-			# if the email address already exists in the database
-			if ($profile != null){
-				# Send them back to the login page with an error
-				Router::redirect("/users/signup/alreadytaken");		
-			}
-	
-		
-		
-		
+			# More data we want stored with the user
+				$_POST['created']  = Time::now();
+				$_POST['modified'] = Time::now();
 
-		
-		# More data we want stored with the user
-			$_POST['created']  = Time::now();
-			$_POST['modified'] = Time::now();
+			# Encrypt the password  
+				$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);            
 
-		# Encrypt the password  
-			$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);            
+			# Create an encrypted token via their email address and a random string
+				$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
 
-		# Create an encrypted token via their email address and a random string
-			$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
-
-		
-		# Insert this user into the database
-			$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
+			
+			# Insert this user into the database
+				$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
 
 
-		# Send a Sign Up Confirmation Email
-		
-			# Build a multi-dimension array of recipients of this email
-			$to[] = Array("name" => $_POST['first_name']." ".$_POST['last_name'], "email" => $_POST['email']);
+			# Send a welcome Email
+			
+				# Build a multi-dimension array of recipients of this email
+				$to[] = Array("name" => $_POST['first_name']." ".$_POST['last_name'], "email" => $_POST['email']);
 
-			# Build a single-dimension array of who this email is coming from
-			# note it's using the constants we set in the configuration above)
-			$from = Array("name" => APP_NAME, "email" => APP_EMAIL);
+				# Build a single-dimension array of who this email is coming from
+				# note it's using the constants we set in the configuration above)
+				$from = Array("name" => APP_NAME, "email" => APP_EMAIL);
 
-			# Subject
-			$subject = "Welcome to My 2 Cents";
+				# Subject
+				$subject = "Welcome to My 2 Cents";
 
-			# You can set the body as just a string of text
-			$body = "Hi ".$_POST['first_name'].", this is just a message to confirm your registration at My 2 Cents";
+				# You can set the body as just a string of text
+				$body = "Hi ".$_POST['first_name'].", Welcome to My 2 Cents";
 
-			# Build multi-dimension arrays of name / email pairs for cc / bcc if you want to 
-			$cc  = "";
-			$bcc = "";
+				# Build multi-dimension arrays of name / email pairs for cc / bcc if you want to 
+				$cc  = "";
+				$bcc = "";
 
-			# With everything set, send the email
-			$email = Email::send($to, $from, $subject, $body, true, $cc, $bcc);
+				# With everything set, send the email
+				$email = Email::send($to, $from, $subject, $body, true, $cc, $bcc);
 
-	
-	
-		# Send them to the login page
-			Router::redirect("/users/login");		
-		
+			
+			# for now, we are not requiring an email confirmation, so just direct them to home page
+			setcookie("token", $_POST['token'], strtotime('+2 weeks'), '/');
+
+			# Send them to the home page
+				Router::redirect("/");		
+		}
     }
 
 
@@ -225,8 +297,15 @@ class users_controller extends base_controller {
     $this->template->title   = "Profile of".$this->user->first_name;
 
 	# for error messages
-	$change_password_error = "";
-	$this->template->content->change_password_error = $change_password_error;
+		$first_name_error = "";
+		$last_name_error = "";
+		$email_error = "";
+		$change_password_error = "";
+
+		$this->template->content->first_name_error = $first_name_error;
+		$this->template->content->last_name_error = $last_name_error;
+		$this->template->content->email_error = $email_error;			
+		$this->template->content->change_password_error = $change_password_error;	
 	
 	# Query
 	$q = 'SELECT 
@@ -263,13 +342,32 @@ class users_controller extends base_controller {
     $this->template->content = View::instance('v_users_profile');
     $this->template->title   = "Profile of".$this->user->first_name;	
 	
-	# check if they want to change the password.
-	# Both Change Password and Confirm Password have to be the same.
-	# If not, display profile view print an error message
-	
-	if ($_POST['change_password'] != "" && $_POST['change_password'] != $_POST['confirm_password']) {
-		$change_password_error = "new password and confirm password do not match, please retry";
 
+	# check if all required fields are filled in...if not, redirect back to profile
+
+		$first_name_error = "";
+		$last_name_error = "";
+		$email_error = "";
+		$change_password_error = "";
+		
+		if ($_POST['first_name'] == "") {
+			$first_name_error = "<-- first name is a required field";
+		}
+		if ($_POST['last_name'] == "") {
+			$last_name_error = "<-- last name is a required field";
+		}
+		if ($_POST['email'] == "") {
+			$email_error = "<-- email is a required field";
+		}
+
+		# check if they want to change the password.
+		# if yes, both Change Password and Confirm Password have to be the same.
+		if ($_POST['change_password'] != "" && $_POST['change_password'] != $_POST['confirm_password']) {
+			$change_password_error = "<-- new password and confirm password do not match";
+		}
+	
+	# if any of the fields above are not filled in correctly, redirect back to profile
+	if ($first_name_error != "" || $last_name_error != "" || $email_error != "" || $change_password_error != "") {
 		#fill in $profile array with _POST values
 		$profile = Array(	'first_name' => $_POST['first_name'], 
 							'last_name' => $_POST['last_name'],
@@ -277,26 +375,30 @@ class users_controller extends base_controller {
 							'change_password' => $_POST['change_password'],	
 							'confirm_password' => $_POST['confirm_password']
 						);
-						
+					
 		# Pass data back to the View
 		$this->template->content->profile = $profile;
+		$this->template->content->first_name_error = $first_name_error;
+		$this->template->content->last_name_error = $last_name_error;
+		$this->template->content->email_error = $email_error;			
 		$this->template->content->change_password_error = $change_password_error;
 
 		# Render the View
 		echo $this->template;							
 	}
-	# either 1) Do not change password or 2) change password has been confirmed
-	else {
+	else {	
+		# everthing has been validated
+
+		
 		# Sanitize user input before moving on
 		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
 
-			
+				
 		# More data we want stored with the user
 		$_POST['modified'] = Time::now();
 
-		# Create an encrypted token via their email address and a random string
-	//	$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 		
-		
+				
+		# next, either 1) Do not change password or 2) change password has been confirmed		
 		# Do not change password
 		if ($_POST['change_password'] == ""){
 			# Update this user into the database
@@ -311,7 +413,11 @@ class users_controller extends base_controller {
 		}
 		# Change the password
 		else {
-			# Encrypt the password  
+
+			# Create an encrypted token via their email address and a random string
+			$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
+
+			# Encrypt the password  	
 			$_POST['change_password'] = sha1(PASSWORD_SALT.$_POST['change_password']);   
 
 			# Update this user into the database
@@ -326,17 +432,14 @@ class users_controller extends base_controller {
 							);	
 			
 		}
-						
+							
 		$user_id = DB::instance(DB_NAME)->update_or_insert_row('users', $data);	
-		
-		
-			# For now, just confirm they've signed up - 
-			# You should eventually make a proper View for this
-			//echo 'You\'re signed up';	
 			
-			# Send them to the main page
-			Router::redirect("/");			
-	}
+			
+				
+		# Send them to the main page
+		Router::redirect("/");			
+	} 
 	
 }
 

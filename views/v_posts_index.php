@@ -1,3 +1,9 @@
+<?php  if (empty($posts) ): ?>
+	<div class = "mainframe">
+		<p> the people you are following have no opinions... please follow some other <a href="/posts/users/">people</a> </p>
+	</div>
+<?php endif; ?>
+
 <?php foreach($posts as $post): ?>
 
 <div class = "post">
