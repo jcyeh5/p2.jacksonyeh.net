@@ -295,7 +295,7 @@ class users_controller extends base_controller {
 		$_POST['modified'] = Time::now();
 
 		# Create an encrypted token via their email address and a random string
-		$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 		
+	//	$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 		
 		
 		# Do not change password
 		if ($_POST['change_password'] == ""){
@@ -305,7 +305,7 @@ class users_controller extends base_controller {
 								'last_name' => $_POST['last_name'],
 								'email' => $_POST['email'],
 								'timezone' => $_POST['timezone'],
-								'token' => $_POST['token'],
+								//'token' => $_POST['token'],
 								'modified' => $_POST['modified']
 							);	
 		}
@@ -334,8 +334,8 @@ class users_controller extends base_controller {
 			# You should eventually make a proper View for this
 			//echo 'You\'re signed up';	
 			
-			# Send them to the main page - or whever you want them to go
-			Router::redirect("/users/login");			
+			# Send them to the main page
+			Router::redirect("/");			
 	}
 	
 }
