@@ -5,9 +5,7 @@ General
 body {
 	margin-left: 5%;
 	margin-right: 5%;  
-	//background:  #505050   ;
 	background: rgb(2,27,46);
-	//background: #708090;
 	font-family: Calibri,Arial,sans-serif;	
 
 } 
@@ -45,14 +43,12 @@ Header
 }
 
 #headernav {
-	//background: navy;
 	background: rgb(3,37,64);
 	border-bottom: medium solid orange;	
 }
 
 #headernav ul {  
 	display: inline;  
-	//background: navy;
 	background: rgb(3,37,64);
 }  
 
@@ -62,7 +58,6 @@ Header
 	background-repeat: no-repeat;  
 	padding-left: 25px;
 	padding-right:25px;
-//	background: navy;
 	background: rgb(3,37,64);
 	font-size: large;
 	font-weight: bold;
