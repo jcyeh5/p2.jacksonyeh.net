@@ -37,13 +37,13 @@ class users_controller extends base_controller {
 			$last_name_error = "";
 			$email_error = "";
 			$password_error = "";
-/*
+
 			$profile = Array(	'first_name' => "", 
 								'last_name' => "",
 								'email' => "",
 								'password' => ""
 							);		
-*/
+
 						
 		# Pass data to the view
 			$this->template->content->error = $error;	
