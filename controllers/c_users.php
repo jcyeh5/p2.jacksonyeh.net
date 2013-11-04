@@ -32,7 +32,14 @@ class users_controller extends base_controller {
 		# Use load_client_files to generate the links from the above array
 		$this->template->client_files_head = Utils::load_client_files($client_files_head);  
 
+	
+			$first_name = "";
+			$last_name = "";
+			$email = "";
+			$password = "";
+			
 		# for error messages
+	
 			$first_name_error = "";
 			$last_name_error = "";
 			$email_error = "";
@@ -52,7 +59,10 @@ class users_controller extends base_controller {
 			$this->template->content->email_error = $email_error;			
 			$this->template->content->password_error = $password_error;	
 			$this->template->content->profile = @profile;
-		
+			$this->template->content->first_name = $first_name;	
+			$this->template->content->last_name = $last_name;	
+			$this->template->content->email = $email;	
+			$this->template->content->password = $password;			
         # Render template
         echo $this->template;
     }
@@ -80,6 +90,10 @@ class users_controller extends base_controller {
 
 		# check if all required fields are filled in...if not, redirect back to sign up screen
 
+			$first_name = $_POST['first_name'];
+			$last_name = $_POST['last_name'];
+			$email = $_POST['email'];
+			$password = $_POST['password'];
 			$first_name_error = "";
 			$last_name_error = "";
 			$email_error = "";
@@ -114,7 +128,11 @@ class users_controller extends base_controller {
 			$this->template->content->last_name_error = $last_name_error;
 			$this->template->content->email_error = $email_error;			
 			$this->template->content->password_error = $password_error;
-
+			$this->template->content->first_name = $first_name;
+			$this->template->content->last_name = $last_name;	
+			$this->template->content->email = $email;	
+			$this->template->content->password = $password;				
+			
 			# Render the View
 			echo $this->template;							
 		}	
