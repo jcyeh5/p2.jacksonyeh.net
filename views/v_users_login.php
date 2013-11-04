@@ -26,7 +26,7 @@
 		<p>Welcome to My 2 Cents.  If you have an account already, please sign in.  If you do not have an account, 
 		please sign up to start giving the rest of the world a piece of your mind.</p>
 		
-				<div align= right><a href='/users/signup'><img  src="/images/signuptoday.png"></a></li></div>
+				<div id="signupbuttondiv"><a href='/users/signup'><img  src="/images/signuptoday.png" alt="link to sign up form"></a></div>
 	</div>
 	
 	

@@ -194,3 +194,7 @@ Login Screen
 	font-family:"Times New Roman",Georgia,Serif;
 	font-size: large;
 }
+
+#signupbuttondiv {
+	align: right;
+}
