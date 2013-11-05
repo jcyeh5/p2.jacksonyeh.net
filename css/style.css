@@ -35,8 +35,8 @@ Header
 
 #headerimage {
 	display: block;
-	background-image: url(/images/my2cents_masthead.jpg);  
-	height: 150px;  
+	background-image: url(/images/my2cents_masthead.png);  
+	height: 160px;  
 	width:  900px;
 	text-indent: -9999px;
 
@@ -101,9 +101,6 @@ Posts
 	margin-bottom: 0px;
 }
 
-#post_time {
-
-}
 
 #post_content {
 	margin-top: 5px;
