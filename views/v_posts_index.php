@@ -10,7 +10,7 @@
 	<div class = "post">
 		<article>		
 			<p class="post_author"><?=$post['first_name']?> <?=$post['last_name']?></p>
-			<time class="post_time" datetime="<?=Time::display($post['created'],'Y-m-d G:i')?>">
+			<time class="post_time" datetime="<?=Time::display($post['created'],'Y-m-d H:i')?>">
 				<?=Time::display($post['created'])?>
 			</time>
 			
