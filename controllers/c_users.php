@@ -290,189 +290,189 @@ class users_controller extends base_controller {
 	
 	public function logout() {
 
-    # If user is blank, they're not logged in; redirect them to the login page
-    if(!$this->user) {
-        Router::redirect('/users/login');
-    }
-	
-    # Generate and save a new token for next login
-    $new_token = sha1(TOKEN_SALT.$this->user->email.Utils::generate_random_string());
+		# If user is blank, they're not logged in; redirect them to the login page
+		if(!$this->user) {
+			Router::redirect('/users/login');
+		}
+		
+		# Generate and save a new token for next login
+		$new_token = sha1(TOKEN_SALT.$this->user->email.Utils::generate_random_string());
 
-    # Create the data array we'll use with the update method
-    # In this case, we're only updating one field, so our array only has one entry
-    $data = Array("token" => $new_token);
+		# Create the data array we'll use with the update method
+		# In this case, we're only updating one field, so our array only has one entry
+		$data = Array("token" => $new_token);
 
-    # Do the update
-    DB::instance(DB_NAME)->update("users", $data, "WHERE token = '".$this->user->token."'");
+		# Do the update
+		DB::instance(DB_NAME)->update("users", $data, "WHERE token = '".$this->user->token."'");
 
-    # Delete their token cookie by setting it to a date in the past - effectively logging them out
-    setcookie("token", "", strtotime('-1 year'), '/');
+		# Delete their token cookie by setting it to a date in the past - effectively logging them out
+		setcookie("token", "", strtotime('-1 year'), '/');
 
-    # Send them back to the main index.
-    Router::redirect("/");
+		# Send them back to the main index.
+		Router::redirect("/");
 
-}
+	}
 
 
 	public function profile() {
 
-    # If user is blank, they're not logged in; redirect them to the login page
-    if(!$this->user) {
-        Router::redirect('/users/login');
-    }
+		# If user is blank, they're not logged in; redirect them to the login page
+		if(!$this->user) {
+			Router::redirect('/users/login');
+		}
 
-    # If they weren't redirected away, continue:
+		# If they weren't redirected away, continue:
 
-    # Setup view
-    $this->template->content = View::instance('v_users_profile');
-    $this->template->title   = "Profile of".$this->user->first_name;
+		# Setup view
+		$this->template->content = View::instance('v_users_profile');
+		$this->template->title   = "Profile of".$this->user->first_name;
 
-	# for error messages
-		$first_name_error = "";
-		$last_name_error = "";
-		$email_error = "";
-		$change_password_error = "";
+		# for error messages
+			$first_name_error = "";
+			$last_name_error = "";
+			$email_error = "";
+			$change_password_error = "";
 
-		$this->template->content->first_name_error = $first_name_error;
-		$this->template->content->last_name_error = $last_name_error;
-		$this->template->content->email_error = $email_error;			
-		$this->template->content->change_password_error = $change_password_error;	
+			$this->template->content->first_name_error = $first_name_error;
+			$this->template->content->last_name_error = $last_name_error;
+			$this->template->content->email_error = $email_error;			
+			$this->template->content->change_password_error = $change_password_error;	
+		
+		# Query
+		$q = 'SELECT 
+					first_name,
+					last_name,
+					email,
+					timezone
+				
+				FROM users
+				WHERE users.user_id = '.$this->user->user_id ;
+
+		# Run the query, store the results in the variable $posts
+		$profile = DB::instance(DB_NAME)->select_row($q);	
+		
+		# Pass data to the View
+		$this->template->content->profile = $profile;
+
+		# Render the View
+		echo $this->template;
 	
-	# Query
-	$q = 'SELECT 
-				first_name,
-				last_name,
-				email,
-				timezone
-			
-			FROM users
-			WHERE users.user_id = '.$this->user->user_id ;
-
-	# Run the query, store the results in the variable $posts
-	$profile = DB::instance(DB_NAME)->select_row($q);	
-	
-	# Pass data to the View
-	$this->template->content->profile = $profile;
-
-	# Render the View
-	echo $this->template;
-	
-}
+	}
 
 
 	public function p_profile() {
 
-    # If user is blank, they're not logged in; redirect them to the login page
-    if(!$this->user) {
-        Router::redirect('/users/login');
-    }
+		# If user is blank, they're not logged in; redirect them to the login page
+		if(!$this->user) {
+			Router::redirect('/users/login');
+		}
 
-    # If they weren't redirected away, continue:
+		# If they weren't redirected away, continue:
 
-    # Setup view
-    $this->template->content = View::instance('v_users_profile');
-    $this->template->title   = "Profile of".$this->user->first_name;	
-	
-
-	# check if all required fields are filled in...if not, redirect back to profile
-
-		$first_name_error = "";
-		$last_name_error = "";
-		$email_error = "";
-		$change_password_error = "";
+		# Setup view
+		$this->template->content = View::instance('v_users_profile');
+		$this->template->title   = "Profile of".$this->user->first_name;	
 		
-		if ($_POST['first_name'] == "") {
-			$first_name_error = "<-- first name is a required field";
-		}
-		if ($_POST['last_name'] == "") {
-			$last_name_error = "<-- last name is a required field";
-		}
-		if ($_POST['email'] == "") {
-			$email_error = "<-- email is a required field";
-		}
 
-		# check if they want to change the password.
-		# if yes, both Change Password and Confirm Password have to be the same.
-		if ($_POST['change_password'] != "" && $_POST['change_password'] != $_POST['confirm_password']) {
-			$change_password_error = "<-- new password and confirm password do not match";
+		# check if all required fields are filled in...if not, redirect back to profile
+
+			$first_name_error = "";
+			$last_name_error = "";
+			$email_error = "";
+			$change_password_error = "";
+			
+			if ($_POST['first_name'] == "") {
+				$first_name_error = "<-- first name is a required field";
+			}
+			if ($_POST['last_name'] == "") {
+				$last_name_error = "<-- last name is a required field";
+			}
+			if ($_POST['email'] == "") {
+				$email_error = "<-- email is a required field";
+			}
+
+			# check if they want to change the password.
+			# if yes, both Change Password and Confirm Password have to be the same.
+			if ($_POST['change_password'] != "" && $_POST['change_password'] != $_POST['confirm_password']) {
+				$change_password_error = "<-- new password and confirm password do not match";
+			}
+		
+		# if any of the fields above are not filled in correctly, redirect back to profile
+		if ($first_name_error != "" || $last_name_error != "" || $email_error != "" || $change_password_error != "") {
+			#fill in $profile array with _POST values
+			$profile = Array(	'first_name' => $_POST['first_name'], 
+								'last_name' => $_POST['last_name'],
+								'email' => $_POST['email'],
+								'change_password' => $_POST['change_password'],	
+								'confirm_password' => $_POST['confirm_password']
+							);
+						
+			# Pass data back to the View
+			$this->template->content->profile = $profile;
+			$this->template->content->first_name_error = $first_name_error;
+			$this->template->content->last_name_error = $last_name_error;
+			$this->template->content->email_error = $email_error;			
+			$this->template->content->change_password_error = $change_password_error;
+
+			# Render the View
+			echo $this->template;							
 		}
-	
-	# if any of the fields above are not filled in correctly, redirect back to profile
-	if ($first_name_error != "" || $last_name_error != "" || $email_error != "" || $change_password_error != "") {
-		#fill in $profile array with _POST values
-		$profile = Array(	'first_name' => $_POST['first_name'], 
-							'last_name' => $_POST['last_name'],
-							'email' => $_POST['email'],
-							'change_password' => $_POST['change_password'],	
-							'confirm_password' => $_POST['confirm_password']
-						);
+		else {	
+			# everthing has been validated
+
+			
+			# Sanitize user input before moving on
+			$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
 					
-		# Pass data back to the View
-		$this->template->content->profile = $profile;
-		$this->template->content->first_name_error = $first_name_error;
-		$this->template->content->last_name_error = $last_name_error;
-		$this->template->content->email_error = $email_error;			
-		$this->template->content->change_password_error = $change_password_error;
+			# More data we want stored with the user
+			$_POST['modified'] = Time::now();
 
-		# Render the View
-		echo $this->template;							
-	}
-	else {	
-		# everthing has been validated
+					
+			# next, either 1) Do not change password or 2) change password has been confirmed		
+			# Do not change password
+			if ($_POST['change_password'] == ""){
+				# Update this user into the database
+				$data    = Array(	'user_id' => $this->user->user_id , 
+									'first_name' => $_POST['first_name'], 
+									'last_name' => $_POST['last_name'],
+									'email' => $_POST['email'],
+									'timezone' => $_POST['timezone'],
+									//'token' => $_POST['token'],
+									'modified' => $_POST['modified']
+								);	
+			}
+			# Change the password
+			else {
 
-		
-		# Sanitize user input before moving on
-		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+				# Create an encrypted token via their email address and a random string
+				$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
 
+				# Encrypt the password  	
+				$_POST['change_password'] = sha1(PASSWORD_SALT.$_POST['change_password']);   
+
+				# Update this user into the database
+				$data    = Array(	'user_id' => $this->user->user_id , 
+									'first_name' => $_POST['first_name'], 
+									'last_name' => $_POST['last_name'],
+									'email' => $_POST['email'],
+									'password' => $_POST['change_password'],
+									'timezone' => $_POST['timezone'],
+									'token' => $_POST['token'],
+									'modified' => $_POST['modified']
+								);	
 				
-		# More data we want stored with the user
-		$_POST['modified'] = Time::now();
-
+			}
+								
+			$user_id = DB::instance(DB_NAME)->update_or_insert_row('users', $data);	
 				
-		# next, either 1) Do not change password or 2) change password has been confirmed		
-		# Do not change password
-		if ($_POST['change_password'] == ""){
-			# Update this user into the database
-			$data    = Array(	'user_id' => $this->user->user_id , 
-								'first_name' => $_POST['first_name'], 
-								'last_name' => $_POST['last_name'],
-								'email' => $_POST['email'],
-								'timezone' => $_POST['timezone'],
-								//'token' => $_POST['token'],
-								'modified' => $_POST['modified']
-							);	
-		}
-		# Change the password
-		else {
-
-			# Create an encrypted token via their email address and a random string
-			$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string()); 
-
-			# Encrypt the password  	
-			$_POST['change_password'] = sha1(PASSWORD_SALT.$_POST['change_password']);   
-
-			# Update this user into the database
-			$data    = Array(	'user_id' => $this->user->user_id , 
-								'first_name' => $_POST['first_name'], 
-								'last_name' => $_POST['last_name'],
-								'email' => $_POST['email'],
-								'password' => $_POST['change_password'],
-								'timezone' => $_POST['timezone'],
-								'token' => $_POST['token'],
-								'modified' => $_POST['modified']
-							);	
-			
-		}
-							
-		$user_id = DB::instance(DB_NAME)->update_or_insert_row('users', $data);	
-			
-			
 				
-		# Send them to the main page
-		Router::redirect("/");			
-	} 
+					
+			# Send them to the main page
+			Router::redirect("/");			
+		} 
 	
-}
+	}
 
 
 } # end of the class
