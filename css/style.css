@@ -39,7 +39,9 @@ a {
 
 a img {
 	outline: none;
+	border: 0;
 }
+
 
 a:visited {  
  	color: white;  
