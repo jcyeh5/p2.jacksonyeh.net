@@ -29,6 +29,23 @@ body {
 	margin: 5px;
 }
 
+.stat {
+	color: red;
+}
+
+a:visited {  
+ 	color: white;  
+
+}
+a:hover {  
+ 	color: white;   
+
+}
+a:active {  
+ 	color: white;  
+}
+
+
 /*-------------------------------------------------------------------------------------------------
 Header
 -------------------------------------------------------------------------------------------------*/
@@ -71,7 +88,17 @@ Header
 	text-decoration: none;
 }
 
+.#headernav ul a:visited {  
+ 	color: white;  
 
+}
+#headernav ul a:hover {  
+	color: yellow;  
+
+}
+#headernav ul a:active {  
+	color: orange;  
+}
 
 
 /*-------------------------------------------------------------------------------------------------
@@ -148,6 +175,12 @@ Posts
 }
 #post_submenu ul li a {
 	text-decoration: none;
+}
+
+#post_users_name {
+	font-size: x-large;
+	border-bottom: thin solid orange;
+	
 }
 
 /*-------------------------------------------------------------------------------------------------

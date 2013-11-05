@@ -5,7 +5,7 @@
 
 
 		First Name<br>
-	   <input type='text' name='first_name' value="<?php echo $firstname; ?>" > 
+	   <input type='text' name='first_name' value="<?=$profile['first_name'] ?>" > 
 		<?php if ($first_name_error <> ""):?> 
 			<font color="red"><?=$first_name_error?></font>
 		<?php endif;?>
