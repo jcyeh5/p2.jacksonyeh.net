@@ -33,10 +33,18 @@ body {
 	color: red;
 }
 
+a {
+	outline: none;
+}
+
+a img {
+	outline: none;
+}
+
 a:visited {  
  	color: white;  
-
 }
+
 a:hover {  
  	color: white;   
 
