@@ -100,6 +100,13 @@ Header
 	color: orange;  
 }
 
+#indextopdiv {
+	border-bottom: thin solid orange;
+}
+
+#indexbottomdiv {
+	padding: 1em;
+}
 
 /*-------------------------------------------------------------------------------------------------
 Posts
@@ -109,7 +116,7 @@ Posts
 #newpostframe {
 	border: thin solid black;
 	background: #FFFFFF;	
-		width: 500px;
+	
 }
 
 #newpostform {
@@ -118,6 +125,7 @@ Posts
 	margin: 5px;
 	padding: 5px;	
 	margin: 5px;
+	width: 856px;
 }
 
 #post_author {
@@ -140,6 +148,13 @@ Posts
 #content {
 	margin: 5px;
 	padding: 5px;
+
+}
+
+#contenttextarea {
+	margin: 5px;
+	padding: 5px;
+	width: 836px;
 
 }
 
@@ -188,10 +203,17 @@ Profile Screen
 -------------------------------------------------------------------------------------------------*/
 #profileframe {
 	border: thin solid black;
-	background: #C88FFF;
+	background: white;
 	padding: 1em;
 	margin: 5px;
+}
 
+#profiletopdiv {
+	border-bottom: thin solid orange;
+}
+
+#profilebottomdiv {
+	padding: 1em;
 }
 
 /*-------------------------------------------------------------------------------------------------
