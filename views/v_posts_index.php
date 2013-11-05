@@ -9,15 +9,15 @@
 <?php foreach($posts as $post): ?>
 	<div class = "post">
 		<article>		
-			<p id="post_author"><?=$post['first_name']?> <?=$post['last_name']?></p>
-			<time id="post_time" datetime="<?=Time::display($post['created'],'Y-m-d G:i')?>">
+			<p class="post_author"><?=$post['first_name']?> <?=$post['last_name']?></p>
+			<time class="post_time" datetime="<?=Time::display($post['created'],'Y-m-d G:i')?>">
 				<?=Time::display($post['created'])?>
 			</time>
 			
-			<p id="post_content"><?=$post['content']?></p>
+			<p class="post_content"><?=$post['content']?></p>
 
 			<!-- menu buttons for each post -->			
-			<div id="post_submenu" align= right> 
+			<div class="post_submenu" > 
 				<ul>
 					<!-- Display Delete button only for own posts -->
 					<?php if($user->user_id == $post['post_user_id']): ?>
@@ -25,12 +25,12 @@
 					<?php endif; ?>		
 					
 					<!-- Display LIKE button only for own posts -->
-					<li><a href='/posts/like/<?=$post['post_id']?>/<?=$user->user_id?>'> <img id="like_img" src="/images/like.png" alt="like this post"></a></li>
+					<li><a href='/posts/like/<?=$post['post_id']?>/<?=$user->user_id?>'> <img class="like_img" src="/images/like.png" alt="like this post"></a></li>
 
 					<!-- If there are any LIKEs for this post -->
 					<?php foreach ($likes as $like): ?>
 						<?php if ($like['post_id'] == $post['post_id']): ?>
-							<li><p id="likes_count">likes: <?=$like['num_likes']?> </p></li>	
+							<li><p class="likes_count">likes: <?=$like['num_likes']?> </p></li>	
 						<?php endif; ?>		
 					<?php endforeach; ?>
 				</ul>

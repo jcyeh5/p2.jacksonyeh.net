@@ -138,7 +138,7 @@ Posts
 	width: 856px;
 }
 
-#post_author {
+.post_author {
 	font-size: x-large;
 	font-weight: bold;
 	color: navy;
@@ -147,7 +147,7 @@ Posts
 }
 
 
-#post_content {
+.post_content {
 	margin-top: 5px;
 	padding-top: 1em;
 	border-top: thin solid blue;
@@ -177,32 +177,35 @@ Posts
 	margin: 5px;
 }
 
-#like_img {
+.like_img {
 	padding-bottom: 4px;
 }
 
-#likes_count {
+.likes_count {
 	padding: 0px;
 	margin: 0px;
 	padding-bottom: 2px;
 }
 
-#likelink:hover {
+.likelink:hover {
 	background: url('/images/liked.png') bottom;
 }
+.post_submenu {
+	text-align: right;
+}
 
-#post_submenu ul {
+.post_submenu ul {
 	display: inline;  
 }
 
-#post_submenu ul li {  
+.post_submenu ul li {  
 	display: inline;
 }
-#post_submenu ul li a {
+.post_submenu ul li a {
 	text-decoration: none;
 }
 
-#post_users_name {
+.post_users_name {
 	font-size: x-large;
 	border-bottom: thin solid orange;
 	
