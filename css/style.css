@@ -227,7 +227,7 @@ Login Screen
 }
 
 #loginform {
-	border: thin solid black;
+	border: thin solid orange;
 	background: gray;
 	margin: 1em;
 	padding: 1em;
@@ -235,6 +235,7 @@ Login Screen
 	display:inline-block;
 
 }
+
 
 #welcometextdiv {
 	width: 500px;
@@ -249,4 +250,5 @@ Login Screen
 
 #signupbuttondiv {
 	text-align: right;
+
 }
