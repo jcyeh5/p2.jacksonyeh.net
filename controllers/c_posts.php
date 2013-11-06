@@ -43,6 +43,8 @@ class posts_controller extends base_controller {
 	
    public function delete($post_id) {
 
+   
+   		$post_id = DB::instance(DB_NAME)->sanitize($post_id);
 		# Delete this connection
 		$where_condition = 'WHERE post_id = '.$post_id;
 		DB::instance(DB_NAME)->delete('posts', $where_condition);
@@ -137,6 +139,8 @@ class posts_controller extends base_controller {
 
 	public function follow($user_id_followed) {
 
+		$user_id_followed = DB::instance(DB_NAME)->sanitize($user_id_followed);
+		
 		# Prepare the data array to be inserted
 			$data = Array(
 				"created" => Time::now(),
@@ -154,6 +158,7 @@ class posts_controller extends base_controller {
 
 	public function unfollow($user_id_followed) {
 	
+		$user_id_followed = DB::instance(DB_NAME)->sanitize($user_id_followed);
 		# Delete this connection
 		$where_condition = 'WHERE user_id = '.$this->user->user_id.' AND user_id_followed = '.$user_id_followed;
 		DB::instance(DB_NAME)->delete('users_users', $where_condition);
@@ -167,9 +172,10 @@ class posts_controller extends base_controller {
 	
 	#fill in $input array
 	
-
+		
 		$compoundindex = $post_id.$user_id;
-	
+		$compoundindex = DB::instance(DB_NAME)->sanitize($compoundindex);
+		
         # Insert
 		$input = Array(	'like_id' => $compoundindex,
 						'created' => Time::now(), 
